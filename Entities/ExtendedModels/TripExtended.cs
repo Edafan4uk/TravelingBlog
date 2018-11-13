@@ -20,6 +20,11 @@ namespace Entities.ExtendedModels
         public IEnumerable<CountryTrip> CountryTrips { get; set; }
         public IEnumerable<Rating> Ratings { get; set; }
 
+        public TripExtended()
+        {
+
+        }
+
         public TripExtended(Trip trip)
         {
             Id = trip.Id;

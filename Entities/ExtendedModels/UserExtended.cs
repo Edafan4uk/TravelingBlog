@@ -37,6 +37,12 @@ namespace Entities.ExtendedModels
         public IEnumerable<Trip> Trips { get; set; }
         public IEnumerable<Comment> Comments { get; set; }
         public IEnumerable<Rating> Ratings { get; set; }
+
+        public UserExtended()
+        {
+                
+        }
+
         public UserExtended(User user)
         {
             Id = user.Id;

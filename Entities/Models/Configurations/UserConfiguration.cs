@@ -13,7 +13,7 @@ namespace Entities.Configurations
             builder.HasIndex(u => u.Email).HasName("user_email_unique").IsUnique();
             builder.HasIndex(u => u.Phone).HasName("user_phone_unique").IsUnique();
             builder.Property(u => u.Email).IsRequired().HasColumnName("email").HasMaxLength(40);
-            builder.Property(u => u.Phone).IsRequired().HasColumnName("phone").HasMaxLength(10);
+            builder.Property(u => u.Phone).IsRequired(true).HasColumnName("phone").HasMaxLength(10);
             builder.Property(u => u.FirstName).IsRequired(true).HasColumnName("firstname").HasMaxLength(50);
             builder.Property(u => u.LastName).IsRequired(true).HasColumnName("lastname").HasMaxLength(50);
             builder.Property(u => u.DateOfBirth).HasColumnName("dateofbirth").HasColumnType("date");

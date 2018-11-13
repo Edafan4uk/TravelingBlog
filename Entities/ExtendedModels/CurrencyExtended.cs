@@ -8,6 +8,12 @@ namespace Entities.Models
         public int Id { get; set; }
         public string Name { get; set; }
         public IEnumerable<Purchase> Purchases { get; set; }
+
+        public CurrencyExtended()
+        {
+                
+        }
+
         public CurrencyExtended(Currency currency)
         {
             Id = currency.Id;

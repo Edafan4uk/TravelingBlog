@@ -13,6 +13,11 @@ namespace Entities.ExtendedModels
 
         public IEnumerable<User> Users { get; set; }
 
+        public RoleExtended()
+        {
+
+        }
+
         public RoleExtended(Role role)
         {
             Id = role.Id;

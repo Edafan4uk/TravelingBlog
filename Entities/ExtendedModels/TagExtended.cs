@@ -14,6 +14,11 @@ namespace Entities.ExtendedModels
         public IEnumerable<TagTrip> TagTrips { get; set; }
         public IEnumerable<TagPostBlog> TagPostBlogs { get; set; }
 
+        public TagExtended()
+        {
+
+        }
+
         public TagExtended(Tag tag)
         {
             Id = tag.Id;

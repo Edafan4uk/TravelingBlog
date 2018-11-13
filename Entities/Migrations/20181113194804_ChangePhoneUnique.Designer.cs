@@ -4,14 +4,16 @@ using Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Entities.Migrations
 {
     [DbContext(typeof(RepositoryContext))]
-    partial class RepositoryContextModelSnapshot : ModelSnapshot
+    [Migration("20181113194804_ChangePhoneUnique")]
+    partial class ChangePhoneUnique
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -480,7 +482,6 @@ namespace Entities.Migrations
                         .HasMaxLength(50);
 
                     b.Property<string>("Phone")
-                        .IsRequired()
                         .HasColumnName("phone")
                         .HasMaxLength(10);
 
@@ -495,10 +496,6 @@ namespace Entities.Migrations
                     b.HasIndex("Email")
                         .IsUnique()
                         .HasName("user_email_unique");
-
-                    b.HasIndex("Phone")
-                        .IsUnique()
-                        .HasName("user_phone_unique");
 
                     b.HasIndex("RoleId");
 
