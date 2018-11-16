@@ -1,8 +1,0 @@
-2018-11-08 23:26:43.8095 INFO Here is info message from our values controller.
-2018-11-08 23:26:44.1085 INFO Here is info message from our values controller.
-2018-11-08 23:26:44.2004 DEBUG Here is debug message from our values controller.
-2018-11-08 23:26:44.2064 DEBUG Here is debug message from our values controller.
-2018-11-08 23:26:44.2064 WARN Here is warn message from our values controller.
-2018-11-08 23:26:44.2064 WARN Here is warn message from our values controller.
-2018-11-08 23:26:44.2064 ERROR Here is error message from our values controller.
-2018-11-08 23:26:44.2064 ERROR Here is error message from our values controller.
