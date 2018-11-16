@@ -32,7 +32,9 @@ namespace TravelingBlog.Controllers
                 return BadRequest(ModelState);
             }
 
-            var userIdentity = mapper.Map<AppUser>(model);
+            //var userIdentity = mapper.Map<AppUser>(model);
+
+            var userIdentity = new AppUser {Email = model.Email, UserName = model.Email};
 
             var result = await userManager.CreateAsync(userIdentity, model.Password);
 

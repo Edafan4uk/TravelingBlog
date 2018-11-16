@@ -25,5 +25,10 @@ namespace TravelingBlog.BusinessLogicLayer.Repositories
             return FindAll()
                 .OrderBy(c => c.FirstName);
         }
+        public async System.Threading.Tasks.Task<UserInfo> GetUserByIdentityId(string id)
+        {
+            var customer = await ApplicationDbContext.UserInfoes.Include(c => c.Identity).SingleAsync(c => c.Identity.Id == id);
+            return customer;
+        }
     }
 }

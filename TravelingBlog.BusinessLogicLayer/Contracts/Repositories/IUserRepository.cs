@@ -8,5 +8,6 @@ namespace TravelingBlog.BusinessLogicLayer.Contracts.Repositories
     {
         IEnumerable<UserInfo> GetAllUsers();
         UserInfo GetUserById(int userId);
+        System.Threading.Tasks.Task<UserInfo> GetUserByIdentityId(string id);
     }
 }

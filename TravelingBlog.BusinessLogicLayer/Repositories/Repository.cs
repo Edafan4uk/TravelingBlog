@@ -17,11 +17,13 @@ namespace TravelingBlog.BusinessLogicLayer.Repositories
         public void Add(TEntity entity)
         {
             ApplicationDbContext.Set<TEntity>().Add(entity);
+            ApplicationDbContext.SaveChanges();
         }
 
         public void AddRange(IEnumerable<TEntity> entities)
         {
             ApplicationDbContext.Set<TEntity>().AddRange(entities);
+            ApplicationDbContext.SaveChanges();
         }
 
         public IEnumerable<TEntity> Find(System.Linq.Expressions.Expression<System.Func<TEntity, bool>> predicate)
@@ -37,21 +39,25 @@ namespace TravelingBlog.BusinessLogicLayer.Repositories
         public void Update(TEntity entity)
         {
             ApplicationDbContext.Set<TEntity>().Update(entity);
+            ApplicationDbContext.SaveChanges();
         }
 
         public void UpdateRange(IEnumerable<TEntity> entities)
         {
             ApplicationDbContext.Set<TEntity>().UpdateRange(entities);
+            ApplicationDbContext.SaveChanges();
         }
 
         public void Remove(TEntity entity)
         {
             ApplicationDbContext.Set<TEntity>().Remove(entity);
+            ApplicationDbContext.SaveChanges();
         }
 
         public void RemoveRange(IEnumerable<TEntity> entities)
         {
             ApplicationDbContext.Set<TEntity>().RemoveRange(entities);
+            ApplicationDbContext.SaveChanges();
         }
 
         public TEntity SingleOrDefault(System.Linq.Expressions.Expression<System.Func<TEntity, bool>> predicate)
