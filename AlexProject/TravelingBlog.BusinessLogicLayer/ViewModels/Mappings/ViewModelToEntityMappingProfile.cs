@@ -1,7 +1,7 @@
 ﻿using TravelingBlog.DataAcceesLayer.Models.Entities;
 using AutoMapper;
 
-namespace TravelingBlog.ViewModels.Mappings
+namespace TravelingBlog.BusinessLogicLayer.ViewModels.Mappings
 {
     public class ViewModelToEntityMappingProfile : Profile
     {
