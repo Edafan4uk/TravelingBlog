@@ -48,7 +48,7 @@ testem.log
 
 # Build results
 
-[Mm]igrations/**
+[Mm]igrations/
 
 [Dd]ebug/
 [Dd]ebugPublic/
