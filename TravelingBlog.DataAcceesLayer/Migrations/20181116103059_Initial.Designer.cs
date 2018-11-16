@@ -10,7 +10,7 @@ using TravelingBlog.DataAcceesLayer.Data;
 namespace TravelingBlog.DataAcceesLayer.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20181116005503_Initial")]
+    [Migration("20181116103059_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
