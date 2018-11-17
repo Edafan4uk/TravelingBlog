@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -15,6 +16,7 @@ namespace TravelingBlog.Controllers
 {
     [Route("api/[controller]")]
     //[ApiController]
+    [Authorize]
     public class PostBlogController : Controller
     {
         private readonly ClaimsPrincipal caller;
@@ -66,22 +68,12 @@ namespace TravelingBlog.Controllers
             //var customer = await appDbContext.UserInfoes.Include(c => c.Identity).SingleAsync(c => c.Identity.Id == userId.Value);
             var user = await unitOfWork.Users.GetUserByIdentityId(userId.Value);
             var trip = unitOfWork.Trips.GetTripById(model.TripId);
-            bool flag = false;
-            foreach (var n in user.Trips)
-            {
-                if (n.Id == trip.Id)
-                {
-                    flag = true;
-                    break;
-                }
-            }
-
-            if (!flag)
+            var isUserCreator = unitOfWork.Trips.IsUserCreator(user.Id, trip.Id);
+            if (!isUserCreator)
             {
                 return BadRequest();
 
             }
-
             blog.Trip = trip;
             unitOfWork.PostBlogs.Add(blog);
             return Ok(model);
@@ -94,22 +86,12 @@ namespace TravelingBlog.Controllers
             var user = await unitOfWork.Users.GetUserByIdentityId(userId.Value);
             var post = unitOfWork.PostBlogs.GetPostBlogById(id);
             var trip = unitOfWork.Trips.GetTripById(post.TripId);
-            bool flag = false;
-            //userinfo
-            foreach (var n in user.Trips)
-            {
-                if (trip.Id == n.Id)
-                {
-                    flag = true;
-                    break;
-                }
-            }
-
-            if (!flag)
+            var isUserCreator = unitOfWork.Trips.IsUserCreator(user.Id, trip.Id);
+            if (!isUserCreator)
             {
                 return BadRequest();
-            }
 
+            }
             unitOfWork.PostBlogs.Remove(post);
             return Ok();
         }

@@ -24,6 +24,10 @@ namespace TravelingBlog.BusinessLogicLayer.Repositories
             return FindAll()
                 .OrderBy(t => t.Name);
         }
+        public bool IsUserCreator(int userId, int tripId)
+        {
+            return Set.Any(i => i.UserInfoId == userId && i.Id == tripId);
+        }
         public Trip GetTripWithPostBlogs(int id)
         {
             try

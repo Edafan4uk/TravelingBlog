@@ -9,5 +9,6 @@ namespace TravelingBlog.BusinessLogicLayer.Contracts.Repositories
         IEnumerable<Trip> GetAllTrips();
         Trip GetTripById(int tripId);
         Trip GetTripWithPostBlogs(int id);
+        bool IsUserCreator(int userId, int tripId);
     }
 }
