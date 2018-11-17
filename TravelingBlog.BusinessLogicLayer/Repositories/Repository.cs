@@ -1,7 +1,6 @@
 ﻿using TravelingBlog.BusinessLogicLayer.Contracts.Repositories;
 using System.Linq;
 using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
 using TravelingBlog.DataAcceesLayer.Data;
 
 namespace TravelingBlog.BusinessLogicLayer.Repositories
@@ -9,14 +8,11 @@ namespace TravelingBlog.BusinessLogicLayer.Repositories
     public class Repository<TEntity> : IRepository<TEntity> where TEntity : class
     {
         public ApplicationDbContext ApplicationDbContext { get; }
-        public DbSet<TEntity> Set { get; set; }
 
         public Repository(ApplicationDbContext applicationDbContext)
         {
             this.ApplicationDbContext = applicationDbContext;
-            this.Set = ApplicationDbContext.Set<TEntity>();
         }
-
 
         public void Add(TEntity entity)
         {

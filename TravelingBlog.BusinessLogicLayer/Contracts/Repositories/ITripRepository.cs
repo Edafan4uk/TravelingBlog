@@ -1,5 +1,4 @@
-﻿using System;
-using TravelingBlog.DataAcceesLayer.Models.Entities;
+﻿using TravelingBlog.DataAcceesLayer.Models.Entities;
 using TravelingBlog.BusinessLogicLayer.ViewModels.DTO;
 using System.Collections.Generic;
 
@@ -9,6 +8,5 @@ namespace TravelingBlog.BusinessLogicLayer.Contracts.Repositories
     {
         IEnumerable<Trip> GetAllTrips();
         Trip GetTripById(int tripId);
-        bool IsUserCreator(int userId, int tripId);
     }
 }
