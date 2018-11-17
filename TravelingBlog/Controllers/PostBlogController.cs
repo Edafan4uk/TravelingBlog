@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -21,7 +22,7 @@ namespace TravelingBlog.Controllers
         public ILoggerManager logger;
         public IUnitOfWork unitOfWork;
 
-        public PostBlogController(ILoggerManager _logger, IUnitOfWork _unitOfWork,IHttpContextAccessor httpContextAccessor)
+        public PostBlogController(ILoggerManager _logger, IUnitOfWork _unitOfWork, IHttpContextAccessor httpContextAccessor)
         {
             logger = _logger;
             unitOfWork = _unitOfWork;
@@ -53,7 +54,7 @@ namespace TravelingBlog.Controllers
             return Ok(blog);
         }
 
-        [HttpPost]
+        [HttpPost, Authorize]
         public async Task<IActionResult> AddBlogAsync([FromBody]PostBlogDTO model)
         {
             var blog = new PostBlog
@@ -62,26 +63,21 @@ namespace TravelingBlog.Controllers
                 DateOfCreation = model.DateOfCreation,
                 Plot = model.Plot
             };
+            //caller.Claims.Select(i => ClaimTypes.Sid);
             var userId = caller.Claims.Single(c => c.Type == "id");
             //var customer = await appDbContext.UserInfoes.Include(c => c.Identity).SingleAsync(c => c.Identity.Id == userId.Value);
             var user = await unitOfWork.Users.GetUserByIdentityId(userId.Value);
             var trip = unitOfWork.Trips.GetTripById(model.TripId);
-            bool flag = false;
-            foreach (var n in user.Trips)
-            {
-                if (n.Id == trip.Id)
-                {
-                    flag = true;
-                    break;
-                }
-            }
-
-            if (!flag)
+            var isUserCreator = unitOfWork.Trips.IsUserCreator(user.Id, trip.Id);
+            if (!isUserCreator)
             {
                 return BadRequest();
-
             }
+            //if (user.Trips.All(i => i.Id != trip.Id))
+            //{
+            //    return BadRequest();
 
+            //}
             blog.Trip = trip;
             unitOfWork.PostBlogs.Add(blog);
             return Ok(model);
@@ -93,31 +89,36 @@ namespace TravelingBlog.Controllers
             var userId = caller.Claims.Single(c => c.Type == "id");
             var user = await unitOfWork.Users.GetUserByIdentityId(userId.Value);
             var post = unitOfWork.PostBlogs.GetPostBlogById(id);
-            var trip = unitOfWork.Trips.GetTripById(post.TripId);
-            bool flag = false;
-            //userinfo
-            foreach (var n in user.Trips)
-            {
-                if (trip.Id == n.Id)
-                {
-                    flag = true;
-                    break;
-                }
-            }
+            //var trip = unitOfWork.Trips.GetTripById(post.TripId);
+            //bool flag = false;
+            ////userinfo
+            //foreach (var n in user.Trips)
+            //{
+            //    if (trip.Id == n.Id)
+            //    {
+            //        flag = true;
+            //        break;
+            //    }
+            //}
 
-            if (!flag)
+            //if (!flag)
+            //{
+            //    return BadRequest();
+            //}
+            var isUserCreator = unitOfWork.Trips.IsUserCreator(user.Id, id);
+            if (!isUserCreator)
             {
                 return BadRequest();
             }
-
             unitOfWork.PostBlogs.Remove(post);
             return Ok();
         }
 
         [HttpPut]
-        public async Task<IActionResult> AsyncUpdateBlog([FromBody]PostBlogDTOWithId model)
+        public async Task<IActionResult> AsyncUpdateBlog([FromBody]PostBlogDTO model)
         {
-            var postblog = unitOfWork.PostBlogs.GetPostBlogById(model.Id);
+
+            var postblog = unitOfWork.PostBlogs.GetPostBlogById(model.TripId);
             if (postblog == null)
             {
                 return NotFound();
