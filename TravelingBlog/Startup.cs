@@ -154,7 +154,7 @@ namespace TravelingBlog
             });
 
             // app.Use(async (context, next) => … will point on the index page in the Angular project.
-            app.Use(async (context, next) =>
+            /*app.Use(async (context, next) =>
             {
                 await next();
 
@@ -164,7 +164,7 @@ namespace TravelingBlog
                     context.Request.Path = "/index.html";
                     await next();
                 }
-            });
+            });*/
 
             // app.UseStaticFiles() enables using static files for the request.
             app.UseStaticFiles();
@@ -176,10 +176,6 @@ namespace TravelingBlog
                 context.Response.ContentType = "text/html";
                 await context.Response.SendFileAsync(Path.Combine(env.WebRootPath, "index.html"));
             });
-
-
-
-
         }
     }
 }
