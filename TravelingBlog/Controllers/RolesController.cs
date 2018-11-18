@@ -21,9 +21,7 @@ namespace TravelingBlog.Controllers
             this.userManager = userManager;
         }
 
-        public IActionResult Index() => View(roleManager.Roles.ToList());
-
-        public IActionResult Create() => View();
+        public IActionResult Index() => Ok(roleManager.Roles.ToList());
 
         [HttpPost]
         public async Task<IActionResult> Create(string name)
@@ -43,7 +41,7 @@ namespace TravelingBlog.Controllers
                     }
                 }
             }
-            return View(name);
+            return Ok(name);
         }
 
         [HttpPost]
@@ -73,7 +71,7 @@ namespace TravelingBlog.Controllers
                     UserRoles = userRoles,
                     AllRoles = allRoles
                 };
-                return View(model);
+                return Ok(model);
             }
             return NotFound();
         }
