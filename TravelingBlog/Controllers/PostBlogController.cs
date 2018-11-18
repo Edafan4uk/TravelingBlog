@@ -20,10 +20,10 @@ namespace TravelingBlog.Controllers
     public class PostBlogController : Controller
     {
         private readonly ClaimsPrincipal caller;
-        public ILoggerManager logger;
-        public IUnitOfWork unitOfWork;
+        private ILoggerManager logger;
+        private IUnitOfWork unitOfWork;
 
-        public PostBlogController(ILoggerManager _logger, IUnitOfWork _unitOfWork,IHttpContextAccessor httpContextAccessor)
+        public PostBlogController(ILoggerManager _logger, IUnitOfWork _unitOfWork, IHttpContextAccessor httpContextAccessor)
         {
             logger = _logger;
             unitOfWork = _unitOfWork;
@@ -32,84 +32,146 @@ namespace TravelingBlog.Controllers
         [HttpGet]
         public IActionResult GetAllBlogs()
         {
-            var blog = unitOfWork.PostBlogs.GetAllPostBlogs();
-            if (blog == null)
+            try
             {
-                logger.LogInfo("TripsNotFound");
-                return NotFound();
+                var blog = unitOfWork.PostBlogs.GetAllPostBlogs();
+                if (blog == null)
+                {
+                    logger.LogInfo("TripsNotFound");
+                    return NotFound();
+                }
+                logger.LogInfo("Return all trips from database");
+                return Ok(blog);
             }
-            logger.LogInfo("Return all trips from database");
-            return Ok(blog);
+            catch (Exception ex)
+            {
+
+                logger.LogError($"Something went wrong inside GetAllBlogs;{ex.Message}");
+                return StatusCode(500, "Internal Server Error");
+            }
+
         }
 
         [HttpGet("{id}")]
         public IActionResult GetBlog(int id)
         {
-            var blog = unitOfWork.PostBlogs.GetPostBlogById(id);
-            if (blog == null)
+            try
             {
-                logger.LogInfo("TripNotFound");
-                return NotFound();
+                var blog = unitOfWork.PostBlogs.GetPostBlogById(id);
+                if (blog == null)
+                {
+                    logger.LogInfo("TripNotFound");
+                    return NotFound();
+                }
+                logger.LogInfo("Return trip with id=" + id);
+                return Ok(blog);
             }
-            logger.LogInfo("Return trip with id=" + id);
-            return Ok(blog);
+            catch (Exception ex)
+            {
+                logger.LogError($"Something went wrong inside GetAllBlogs by Id;{ex.Message}");
+                return StatusCode(500, "Internal Server Error");
+            }
+
         }
 
         [HttpPost]
         public async Task<IActionResult> AddBlogAsync([FromBody]PostBlogDTO model)
         {
-            var blog = new PostBlog
+            try
             {
-                Name = model.Name,
-                DateOfCreation = model.DateOfCreation,
-                Plot = model.Plot
-            };
-            var userId = caller.Claims.Single(c => c.Type == "id");
-            //var customer = await appDbContext.UserInfoes.Include(c => c.Identity).SingleAsync(c => c.Identity.Id == userId.Value);
-            var user = await unitOfWork.Users.GetUserByIdentityId(userId.Value);
-            var trip = unitOfWork.Trips.GetTripById(model.TripId);
-            var isUserCreator = unitOfWork.Trips.IsUserCreator(user.Id, trip.Id);
-            if (!isUserCreator)
-            {
-                return BadRequest();
+                var blog = new PostBlog
+                {
+                    Name = model.Name,
+                    DateOfCreation = model.DateOfCreation,
+                    Plot = model.Plot
+                };
+                var userId = caller.Claims.Single(c => c.Type == "id");
+                //var customer = await appDbContext.UserInfoes.Include(c => c.Identity).SingleAsync(c => c.Identity.Id == userId.Value);
+                var user = await unitOfWork.Users.GetUserByIdentityId(userId.Value);
+                var trip = unitOfWork.Trips.GetTripById(model.TripId);
 
+                var isUserCreator = unitOfWork.Trips.IsUserCreator(user.Id, trip.Id);
+                if (!isUserCreator)
+                {
+                    return BadRequest();
+
+                }
+                blog.Trip = trip;
+                unitOfWork.PostBlogs.Add(blog);
+                return Ok(model);
             }
-            blog.Trip = trip;
-            unitOfWork.PostBlogs.Add(blog);
-            return Ok(model);
+            catch (Exception ex)
+            {
+                logger.LogError($"Something went wrong inside AddBlogAsync;{ex.Message}");
+                return StatusCode(500, "Internal Server Error");
+            }
+
         }
 
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> AsyncDeleteBlog(int id)
         {
-            var userId = caller.Claims.Single(c => c.Type == "id");
-            var user = await unitOfWork.Users.GetUserByIdentityId(userId.Value);
-            var post = unitOfWork.PostBlogs.GetPostBlogById(id);
-            var trip = unitOfWork.Trips.GetTripById(post.TripId);
-            var isUserCreator = unitOfWork.Trips.IsUserCreator(user.Id, trip.Id);
-            if (!isUserCreator)
+            try
             {
-                return BadRequest();
+                var userId = caller.Claims.Single(c => c.Type == "id");
+                var user = await unitOfWork.Users.GetUserByIdentityId(userId.Value);
+                var post = unitOfWork.PostBlogs.GetPostBlogById(id);
+                var trip = unitOfWork.Trips.GetTripById(post.TripId);
 
+                var isUserCreator = unitOfWork.Trips.IsUserCreator(user.Id, trip.Id);
+                if (!isUserCreator)
+                {
+                    return BadRequest();
+                }
+
+                unitOfWork.PostBlogs.Remove(post);
+                return Ok();
             }
-            unitOfWork.PostBlogs.Remove(post);
-            return Ok();
+            catch (Exception ex)
+            {
+                logger.LogError($"Something went wrong inside AsyncDeleteBlog;{ex.Message}");
+                return StatusCode(500, "Internal Server Error");
+            }
+
         }
 
-        [HttpPut]
-        public async Task<IActionResult> AsyncUpdateBlog([FromBody]PostBlogDTOWithId model)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> AsyncUpdateBlog(int id, [FromBody]PostBlogDTO model)
         {
-            var postblog = unitOfWork.PostBlogs.GetPostBlogById(model.Id);
-            if (postblog == null)
+            try
             {
-                return NotFound();
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest();
+                }
+                var userId = caller.Claims.Single(c => c.Type == "id");
+                var user = await unitOfWork.Users.GetUserByIdentityId(userId.Value);
+                var trip = unitOfWork.Trips.GetTripWithPostBlogs(model.TripId);
+                var isUserCreator = unitOfWork.Trips.IsUserCreator(user.Id, trip.Id);
+                if (!isUserCreator)
+                {
+                    return BadRequest();
+
+                }
+                var post = unitOfWork.PostBlogs.GetPostBlogById(id);
+                if (post == null)
+                {
+                    return NotFound();
+                }
+
+                post.Name = model.Name;
+                post.Plot = model.Plot;
+
+                unitOfWork.PostBlogs.Update(post);
+
+                return Ok(post);
             }
-            postblog.Name = model.Name;
-            postblog.Plot = model.Plot;
+            catch (Exception ex)
+            {
+                logger.LogError($"Something went wrong inside AsyncUpdateBlog;{ex.Message}");
+                return StatusCode(500, "Internal Server Error");
+            }
 
-            unitOfWork.PostBlogs.Update(postblog);
-
-            return Ok(postblog);
         }
 
 
