@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +11,7 @@ using TravelingBlog.DataAcceesLayer.Models.Entities;
 namespace TravelingBlog.Controllers
 {
     [Route("api/tag")]
+    [Authorize]
     public class TagController:Controller
     {
         public ILoggerManager loggerManager;
@@ -18,26 +20,29 @@ namespace TravelingBlog.Controllers
         {
             loggerManager = manager;
             unitOfWork = unit;
-        }
-        [Route("")]
-        [Route("GetAllTags")]
+        }      
+        [AllowAnonymous]
         [HttpGet]
         public IActionResult GetAllTags()
         {
             try
             {
                 var tags = unitOfWork.Tags.GetAllTags();
+                var list = new List<TagDTOWithId>();
+                for (int i = 0; i < tags.Count(); i++)
+                {
+                    list.Add(new TagDTOWithId { Id = tags.ElementAt(i).Id,Name = tags.ElementAt(i).Name });
+                }
                 loggerManager.LogInfo("Returned all tags from TagController");
-                return Ok(tags);
+                return Ok(list);
             }
             catch(Exception ex)
             {
                 loggerManager.LogError($"Something went wrong inside GetAllTagsAction:{ex.Message}");
                 return StatusCode(500, "Internal Server Error");
             }
-        }
-        [Route("{id}")]
-        [Route("GetTagById/{id}")]
+        }        
+        [AllowAnonymous]
         [HttpGet("{id}")]
         public IActionResult GetTagById(int id)
         {
@@ -51,8 +56,9 @@ namespace TravelingBlog.Controllers
                 }
                 else
                 {
+                    var tagDTO = new TagDTOWithId { Id =tag.Id,Name = tag.Name };
                     loggerManager.LogInfo($"Returned tag with id:{id}");
-                    return Ok(tag);
+                    return Ok(tagDTO);
                 }
             }
             catch(Exception ex)
@@ -60,9 +66,7 @@ namespace TravelingBlog.Controllers
                 loggerManager.LogError($"Something went wrong inside GetTagByIdAction;{ex.Message}");
                 return StatusCode(500, "Internal Server Error");
             }
-        }
-        [Route("")]
-        [Route("CreateTag")]
+        }        
         [HttpPost]
         public IActionResult CreateTag([FromBody]TagDTO tagDTO)
         {
@@ -81,49 +85,14 @@ namespace TravelingBlog.Controllers
                 unitOfWork.Tags.Add(new Tag { Name = tagDTO.Name });
 
                 return Ok();
-
             }
             catch(Exception ex)
             {
                 loggerManager.LogError($"Something went wrong inside CreateTagAction:{ex.Message}");
                 return StatusCode(500, "Internal server error");
             }
-        }
-        /*
-        [Route("")]
-        [Route("UpdateTag/{id}")]
-        [HttpPut("{id}")]
-        public IActionResult UpdateTag(int id,[FromBody]TagDTO tagDTO)
-        {
-            try
-            {
-                if(tagDTO == null)
-                {
-                    loggerManager.LogError($"Object sent from client is null");
-                    return BadRequest("Tag object is null");
-                }
-                if(!ModelState.IsValid)
-                {
-                    loggerManager.LogError("Invalid object tag recieved from client");
-                    return BadRequest("Invalid object sent");
-                }
-                var tag = unitOfWork.Tags.GetTagById(id);
-                if(tag==null)
-                {
-                    loggerManager.LogError($"Tag with id:{id} has not been found");
-                    return NotFound();
-                }
-                tag.Name = tagDTO.Name;
-                unitOfWork.Tags.Update(tag);
-                return NoContent();
-            }
-            catch(Exception ex)
-            {
-                loggerManager.LogError($"Something went wrong inside UpdateTagAction:{ex.Message}");
-                return StatusCode(500, "Internal server error");
-            }
-        }
-        */
+        }        
+        //[Authorize(Roles ="moderator")]
         [HttpDelete("{id}")]
         public IActionResult DeleteTag(int id)
         {
