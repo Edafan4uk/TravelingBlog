@@ -72,7 +72,6 @@ namespace TravelingBlog.Controllers
             if (!isUserCreator)
             {
                 return BadRequest();
-
             }
             blog.Trip = trip;
             unitOfWork.PostBlogs.Add(blog);

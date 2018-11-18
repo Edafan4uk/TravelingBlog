@@ -30,18 +30,7 @@ namespace TravelingBlog.BusinessLogicLayer.Repositories
         }
         public Trip GetTripWithPostBlogs(int id)
         {
-            try
-            {
-                return ApplicationDbContext.Trips.Include(t => t.PostBlogs).SingleOrDefault(t => t.Id == id);
-            }
-            catch (ArgumentNullException)
-            {
-                return null;
-            }
-            catch (InvalidOperationException)
-            {
-                return null;
-            }
-        }
+            return ApplicationDbContext.Trips.Include(t => t.PostBlogs).SingleOrDefault(t => t.Id == id);
+        }    
     }
 }

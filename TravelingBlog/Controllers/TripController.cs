@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TravelingBlog.BusinessLogicLayer.Contracts;
@@ -10,8 +11,9 @@ using TravelingBlog.BusinessLogicLayer.ViewModels.DTO;
 using TravelingBlog.DataAcceesLayer.Models.Entities;
 
 namespace TravelingBlog.Controllers
-{
+{    
     [Route("api/trip")]
+    [Authorize]
     public class TripController : Controller
     {
         private readonly ClaimsPrincipal caller;
@@ -23,7 +25,8 @@ namespace TravelingBlog.Controllers
             this.logger = logger;
             this.unitOfWork = unitOfWork;
             caller = httpContextAccessor.HttpContext.User;
-        }        
+        }
+        [AllowAnonymous]
         [HttpGet]
         public IActionResult GetAllTrips()
         {
@@ -36,7 +39,12 @@ namespace TravelingBlog.Controllers
                     return NotFound();
                 }
                 logger.LogInfo("Return all trips from database");
-                return Ok(trips);
+                var list = new List<TripDTOWithId>();
+                for (int i = 0; i < trips.Count(); i++)
+                {
+                    list.Add(new TripDTOWithId { Id = trips.ElementAt(i).Id,Name = trips.ElementAt(i).Name, IsDone = trips.ElementAt(i).IsDone });
+                }
+                return Ok(list);
             }
             catch(Exception ex)
             {
@@ -44,6 +52,7 @@ namespace TravelingBlog.Controllers
                 return StatusCode(500, "Internal server error");
             }
         }
+        [AllowAnonymous]
         [HttpGet("{id}",Name = "GetTrip")]
         public IActionResult GetTrip(int id)
         {
@@ -56,7 +65,7 @@ namespace TravelingBlog.Controllers
                     return NotFound();
                 }
                 logger.LogInfo("Return trip with id=" + id);
-                return Ok(trip);
+                return Ok(new TripDTOWithId { Id = trip.Id,Name = trip.Name, IsDone = trip.IsDone});
             }
             catch(Exception ex)
             {
@@ -64,6 +73,7 @@ namespace TravelingBlog.Controllers
                 return StatusCode(500, "Internal server error");
             }
         }
+        [AllowAnonymous]
         [HttpGet("GetTripWithPosts/{id}", Name = "GetTripWithPost")]
         public IActionResult GetTripWithPostBlogs(int id)
         {
@@ -77,7 +87,7 @@ namespace TravelingBlog.Controllers
                 }
                 trip = unitOfWork.Trips.GetTripWithPostBlogs(id);
                 logger.LogInfo("Return trip with postblogs id=" + id);
-                return Ok(trip);
+                return Ok(new TripDetailsDTO(trip) { PostBlogs = trip.PostBlogs });
             }
             catch (Exception ex)
             {
@@ -116,16 +126,30 @@ namespace TravelingBlog.Controllers
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            var trip = unitOfWork.Trips.GetTripById(id);
-            if (trip == null)
+            try
             {
-                return NotFound();
+                var trip = unitOfWork.Trips.GetTripById(id);
+                if (trip == null)
+                {
+                    return NotFound();
+                }
+                var userid = caller.Claims.Single(c => c.Type == "id");
+                var user = unitOfWork.Users.GetUserByIdentityId(userid.Value);
+                if (unitOfWork.Trips.IsUserCreator(user.Id, id))
+                {
+                    unitOfWork.Trips.Remove(trip);
+                    return NoContent();
+                }
+                return StatusCode(403, "Forbidden");
             }
-            unitOfWork.Trips.Remove(trip);
-            return NoContent();
+            catch (Exception ex)
+            {
+                logger.LogError($"Error occured in DeleteTripAction:{ex.Message}");
+                return StatusCode(500, "Internal server error");
+            }
         }
         [HttpPut("{id}")]
-        public IActionResult Update(int id,[FromBody]TripDTO model)
+        public async Task<IActionResult> Update(int id,[FromBody]TripDTO model)
         {
             try
             {
@@ -145,13 +169,18 @@ namespace TravelingBlog.Controllers
                     logger.LogError($"Trip with id :{id} has not been found");
                     return NotFound();
                 }
-
-                unitOfWork.Trips.Update(trip);
-                return Ok(trip);
+                var userid = caller.Claims.Single(c => c.Type == "id");
+                var user = await unitOfWork.Users.GetUserByIdentityId(userid.Value);
+                if (unitOfWork.Trips.IsUserCreator(user.Id, id))
+                {
+                    unitOfWork.Trips.Update(trip);
+                    return Ok(new TripDTO {  Name = trip.Name, IsDone = trip.IsDone});
+                }
+                return StatusCode(403, "Forbidden");
             }
             catch(Exception ex)
             {
-                logger.LogError($"An error occured UpdateTripAction");
+                logger.LogError($"An error occured UpdateTripAction;{ex.Message}");
                 return StatusCode(500, "Internal server error");
             }
         }
