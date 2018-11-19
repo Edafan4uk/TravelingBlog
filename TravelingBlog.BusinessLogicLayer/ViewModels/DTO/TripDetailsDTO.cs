@@ -7,17 +7,19 @@ namespace TravelingBlog.BusinessLogicLayer.ViewModels.DTO
 {
     public class TripDetailsDTO
     {
+        public int? Id { get; set; }
         public string Name { get; set; }
         public bool IsDone { get; set; }
 
-        public IEnumerable<PostBlog> PostBlogs { get; set; }
-        public IEnumerable<Comment> Comments { get; set; }
-        public IEnumerable<TagTrip> TagTrips { get; set; }
-        public IEnumerable<CountryTrip> CountryTrips { get; set; }
-        public IEnumerable<Rating> Ratings { get; set; }
+        public IEnumerable<PostBlogDTO> PostBlogs { get; set; }
+        public IEnumerable<CommentDTO> Comments { get; set; }
+        public IEnumerable<TagDTO> TagTrips { get; set; }
+        public IEnumerable<CountryDTO> CountryTrips { get; set; }
+        public IEnumerable<RatingDTO> Ratings { get; set; }
 
         public TripDetailsDTO(Trip trip)
         {
+            this.Id = trip.Id;
             this.Name = trip.Name;
             this.IsDone = trip.IsDone;
         }

@@ -39,10 +39,12 @@ namespace TravelingBlog.Controllers
                     return NotFound();
                 }
                 logger.LogInfo("Return all trips from database");
-                var list = new List<TripDTOWithId>();
+                var list = new List<TripDTO>();
                 for (int i = 0; i < trips.Count(); i++)
                 {
-                    list.Add(new TripDTOWithId { Id = trips.ElementAt(i).Id,Name = trips.ElementAt(i).Name, IsDone = trips.ElementAt(i).IsDone });
+                    list.Add(new TripDTO { Id = trips.ElementAt(i).Id,
+                        Name = trips.ElementAt(i).Name,
+                        IsDone = trips.ElementAt(i).IsDone });
                 }
                 return Ok(list);
             }
@@ -65,7 +67,7 @@ namespace TravelingBlog.Controllers
                     return NotFound();
                 }
                 logger.LogInfo("Return trip with id=" + id);
-                return Ok(new TripDTOWithId { Id = trip.Id,Name = trip.Name, IsDone = trip.IsDone});
+                return Ok(new TripDTO { Id = trip.Id,Name = trip.Name, IsDone = trip.IsDone});
             }
             catch(Exception ex)
             {
@@ -87,7 +89,18 @@ namespace TravelingBlog.Controllers
                 }
                 trip = unitOfWork.Trips.GetTripWithPostBlogs(id);
                 logger.LogInfo("Return trip with postblogs id=" + id);
-                return Ok(new TripDetailsDTO(trip) { PostBlogs = trip.PostBlogs });
+                var list = new List<PostBlogDTO>();
+                for (int i = 0; i < trip.PostBlogs.Count; i++)
+                {
+                    list.Add(new PostBlogDTO
+                    {
+                        Name = trip.PostBlogs.ElementAt(i).Name,
+                        Plot = trip.PostBlogs.ElementAt(i).Plot,
+                        TripId = trip.PostBlogs.ElementAt(i).TripId,
+                        DateOfCreation = trip.PostBlogs.ElementAt(i).DateOfCreation
+                    });
+                }
+                return Ok(new TripDetailsDTO(trip) {PostBlogs = list });
             }
             catch (Exception ex)
             {
@@ -135,7 +148,7 @@ namespace TravelingBlog.Controllers
                 }
                 var userid = caller.Claims.Single(c => c.Type == "id");
                 var user = unitOfWork.Users.GetUserByIdentityId(userid.Value);
-                if (unitOfWork.Trips.IsUserCreator(user.Id, id))
+                if (unitOfWork.Trips.IsUserCreator(user.Id, id)||caller.IsInRole("admin"))
                 {
                     unitOfWork.Trips.Remove(trip);
                     return NoContent();
@@ -171,7 +184,7 @@ namespace TravelingBlog.Controllers
                 }
                 var userid = caller.Claims.Single(c => c.Type == "id");
                 var user = await unitOfWork.Users.GetUserByIdentityId(userid.Value);
-                if (unitOfWork.Trips.IsUserCreator(user.Id, id))
+                if (unitOfWork.Trips.IsUserCreator(user.Id, id)||caller.IsInRole("admin"))
                 {
                     unitOfWork.Trips.Update(trip);
                     return Ok(new TripDTO {  Name = trip.Name, IsDone = trip.IsDone});
