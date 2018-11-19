@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Logging;
 using TravelingBlog.BusinessLogicLayer.Contracts;
 using TravelingBlog.BusinessLogicLayer.ViewModels.DTO;
@@ -16,7 +17,6 @@ namespace TravelingBlog.Controllers
 {
     [Route("api/[controller]")]
     //[ApiController]
-    [Authorize]
     public class PostBlogController : Controller
     {
         private readonly ClaimsPrincipal caller;
@@ -75,6 +75,7 @@ namespace TravelingBlog.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> AddBlogAsync([FromBody]PostBlogDTO model)
         {
             try
@@ -109,6 +110,7 @@ namespace TravelingBlog.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize]
         public async Task<IActionResult> AsyncDeleteBlog(int id)
         {
             try
@@ -137,6 +139,7 @@ namespace TravelingBlog.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize]
         public async Task<IActionResult> AsyncUpdateBlog(int id, [FromBody]PostBlogDTO model)
         {
             try
