@@ -8,6 +8,7 @@ namespace TravelingBlog.BusinessLogicLayer.ViewModels.DTO
 {
     public class PostBlogDTO
     {
+        public int? Id { get; set; }
         [Required]
         public string Name { get; set; }
         [Required]
