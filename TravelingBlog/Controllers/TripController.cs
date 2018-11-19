@@ -44,7 +44,8 @@ namespace TravelingBlog.Controllers
                 {
                     list.Add(new TripDTO { Id = trips.ElementAt(i).Id,
                         Name = trips.ElementAt(i).Name,
-                        IsDone = trips.ElementAt(i).IsDone });
+                        IsDone = trips.ElementAt(i).IsDone,
+                        UserId = trips.ElementAt(i).UserInfoId});
                 }
                 return Ok(list);
             }
@@ -67,7 +68,7 @@ namespace TravelingBlog.Controllers
                     return NotFound();
                 }
                 logger.LogInfo("Return trip with id=" + id);
-                return Ok(new TripDTO { Id = trip.Id,Name = trip.Name, IsDone = trip.IsDone});
+                return Ok(new TripDTO { Id = trip.Id, Name = trip.Name, IsDone = trip.IsDone,UserId = trip.UserInfoId });
             }
             catch(Exception ex)
             {
@@ -94,6 +95,7 @@ namespace TravelingBlog.Controllers
                 {
                     list.Add(new PostBlogDTO
                     {
+                        Id = trip.PostBlogs.ElementAt(i).Id,
                         Name = trip.PostBlogs.ElementAt(i).Name,
                         Plot = trip.PostBlogs.ElementAt(i).Plot,
                         TripId = trip.PostBlogs.ElementAt(i).TripId,
@@ -128,6 +130,7 @@ namespace TravelingBlog.Controllers
                 var user = await unitOfWork.Users.GetUserByIdentityId(userId.Value);
                 trip.UserInfo = user;
                 unitOfWork.Trips.Add(trip);
+                model.UserId = user.Id;
                 return Ok(model);
             }
             catch(Exception ex)
@@ -137,7 +140,7 @@ namespace TravelingBlog.Controllers
             }
         }
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
             try
             {
@@ -147,7 +150,7 @@ namespace TravelingBlog.Controllers
                     return NotFound();
                 }
                 var userid = caller.Claims.Single(c => c.Type == "id");
-                var user = unitOfWork.Users.GetUserByIdentityId(userid.Value);
+                var user = await unitOfWork.Users.GetUserByIdentityId(userid.Value);
                 if (unitOfWork.Trips.IsUserCreator(user.Id, id)||caller.IsInRole("admin"))
                 {
                     unitOfWork.Trips.Remove(trip);
@@ -187,7 +190,7 @@ namespace TravelingBlog.Controllers
                 if (unitOfWork.Trips.IsUserCreator(user.Id, id)||caller.IsInRole("admin"))
                 {
                     unitOfWork.Trips.Update(trip);
-                    return Ok(new TripDTO {  Name = trip.Name, IsDone = trip.IsDone});
+                    return Ok(new TripDTO { Id = trip.Id, Name = trip.Name, IsDone = trip.IsDone});
                 }
                 return StatusCode(403, "Forbidden");
             }
