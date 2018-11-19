@@ -1,0 +1,211 @@
+.carousel-item {
+    height: 65vh;
+    min-height: 500px;
+    background: no-repeat center center scroll;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+  }
+
+  .ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    height: 100%;
+    background-color: #333;
+  
+    .active {
+        background-color: #4CAF50;
+    }
+}
+
+li {
+   
+    float: left;
+    
+}
+
+li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+   
+}
+
+/* Change the link color to #111 (black) on hover */
+li a:hover {
+    background-color: #111;
+}
+
+.button{
+    background-color: #4CAF50;
+     color: black;
+     font-size: 20px;
+     border: 2px solid black;
+     width: 40%;
+     border: none;
+     padding: 15px 32px;
+     text-align: center;
+     text-decoration: none;
+     display: inline-block;
+     margin: 4px 2px;
+     cursor: pointer;
+}
+
+.btn{
+    color: #4CAF50;
+    margin: 8px;
+    float: right;
+}
+
+.button-section{
+text-align: center;
+}
+
+.container{
+    margin-top: 10px;
+
+}
+
+
+div#footer {
+    padding: 10px;
+    color: white;
+    background-color: black;
+}
+
+.container-img{
+    
+  float: left;
+  position: relative;
+  width: 30%;
+  padding-bottom: 30%;
+  margin: 1.66%; 
+  display: inline;
+
+  }
+   @nest .photo{
+      width: 30%;
+      padding-bottom: 30%;
+   max-width: 500px;
+  margin: 20px auto;
+  display: flex;
+  flex-wrap: wrap;
+  perspective: 1000px;
+
+  .photo-element{
+      
+      flex-basis: 48%;
+      position: relative;
+      margin: 20px 1%;
+      transform-style: preserve-3d;
+      transition-duration: 1s;
+
+      &:hover{
+          transform: rotateY(180deg);
+
+          .photo-description{
+              z-index: 1;
+          }
+      }
+  }
+
+  .photo-img{
+      backface-visibility: hidden;
+      .img{
+      display: block;
+      max-width: 100%;
+      }
+  }
+
+  .photo-description{
+      position: absolute;
+      left: 0;
+      top: 0;
+     background-color: #111;
+     width: 100%;
+     height: 100%;
+     display: flex;
+     align-items: center;
+     z-index: -1;
+     transform: rotateY(180deg);
+
+     p{
+         font-size: 20px;
+         line-height: 26px;
+         text-align: center;
+         color: aliceblue;
+         flex-basis: 100%;
+     }
+  }
+}
+
+
+.col-3 {
+    width: 33.33%;
+}
+
+.section-heading {
+    padding: 0 0 15px 0;
+}
+
+.col-3 {
+  width: 33.33%;
+}
+
+.section-heading {
+  padding: 0 0 15px 0;
+}
+
+.row {
+ padding: 15px !important;
+  
+}
+.clearfix:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.testimonial {
+    padding: 15px;
+}
+
+blockquote {
+    position: relative;
+}
+
+.testimonial img {
+    max-height: 250px;
+   border-radius: 300em;
+}
+
+.testimonial footer {
+    padding-top: 12px;
+}
+
+
+.testimonial.classic img {
+    display: inline-block;
+    margin-bottom: 25px;
+}
+
+.testimonial.classic q {
+    display: block;
+}
+
+.testimonial.classic footer:before {
+    display: block;
+    content: "";
+    width: 30px;
+    height: 4px;
+    margin: 10px auto 15px auto;
+}
+
+.text-center {
+    text-align: center;
+}
