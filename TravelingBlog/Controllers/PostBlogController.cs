@@ -94,7 +94,6 @@ namespace TravelingBlog.Controllers
                 if (!isUserCreator)
                 {
                     return Forbid();
-
                 }
                 post.Trip = trip;
                 unitOfWork.PostBlogs.Add(post);
@@ -153,7 +152,6 @@ namespace TravelingBlog.Controllers
                 if (!isUserCreator)
                 {
                     return Forbid();
-
                 }
                 var post = unitOfWork.PostBlogs.GetPostBlogById(id);
                 if (post == null)
