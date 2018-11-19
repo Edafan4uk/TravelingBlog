@@ -79,7 +79,7 @@ namespace TravelingBlog.Controllers
         {
             try
             {
-                var blog = new PostBlog
+                var post = new PostBlog
                 {
                     Name = model.Name,
                     DateOfCreation = model.DateOfCreation,
@@ -96,8 +96,8 @@ namespace TravelingBlog.Controllers
                     return BadRequest();
 
                 }
-                blog.Trip = trip;
-                unitOfWork.PostBlogs.Add(blog);
+                post.Trip = trip;
+                unitOfWork.PostBlogs.Add(post);
                 return Ok(model);
             }
             catch (Exception ex)
@@ -125,7 +125,7 @@ namespace TravelingBlog.Controllers
                 }
 
                 unitOfWork.PostBlogs.Remove(post);
-                return Ok();
+                return Ok(post);
             }
             catch (Exception ex)
             {
