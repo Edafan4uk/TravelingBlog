@@ -11,8 +11,8 @@ namespace TravelingBlog.DataAcceesLayer.Configurations
             builder.HasKey(p => p.Id).HasName("pk_constraint_postblog");
             builder.Property(p => p.Id).HasColumnName("id");
 
-            builder.Property(p => p.Name).IsRequired().HasColumnName("namepostblog").HasMaxLength(100).IsRequired();
-            builder.Property(p => p.Plot).IsRequired().HasColumnName("plot").IsRequired();
+            builder.Property(p => p.Name).IsRequired().HasColumnName("namepostblog").HasMaxLength(100);
+            builder.Property(p => p.Plot).IsRequired().HasColumnName("plot");
 
             builder.Property(p => p.DateOfCreation).IsRequired().HasColumnType("datetime").
                 HasColumnName("creationdate");
