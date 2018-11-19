@@ -25,5 +25,6 @@ namespace TravelingBlog.BusinessLogicLayer.Repositories
             return FindAll()
                 .OrderBy(pb => pb.Name);
         }
+
     }
 }

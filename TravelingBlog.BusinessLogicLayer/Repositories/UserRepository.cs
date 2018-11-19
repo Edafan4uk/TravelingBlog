@@ -8,7 +8,7 @@ using TravelingBlog.DataAcceesLayer.Data;
 
 namespace TravelingBlog.BusinessLogicLayer.Repositories
 {
-    public class UserRepository : Repository<UserInfo>, IUserRepository
+    public class UserRepository : Repository<UserInfo>,IUserRepository
     {
         public UserRepository(ApplicationDbContext ApplicationDbContext) : base(ApplicationDbContext)
         {
