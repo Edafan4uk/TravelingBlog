@@ -55,7 +55,7 @@ namespace TravelingBlog.Controllers
             return RedirectToAction("Index");
         }
 
-        public IActionResult UserList() => View(userManager.Users.ToList());
+        public IActionResult UserList() => Ok(userManager.Users.ToList());
 
         public async Task<IActionResult> Edit(string userId)
         {
