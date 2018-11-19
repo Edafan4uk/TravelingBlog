@@ -93,11 +93,12 @@ namespace TravelingBlog.Controllers
                 var isUserCreator = unitOfWork.Trips.IsUserCreator(user.Id, trip.Id);
                 if (!isUserCreator)
                 {
-                    return BadRequest();
+                    return Forbid();
 
                 }
                 post.Trip = trip;
                 unitOfWork.PostBlogs.Add(post);
+                logger.LogInfo($"Add some post");
                 return Ok(model);
             }
             catch (Exception ex)
@@ -121,10 +122,11 @@ namespace TravelingBlog.Controllers
                 var isUserCreator = unitOfWork.Trips.IsUserCreator(user.Id, trip.Id);
                 if (!isUserCreator)
                 {
-                    return BadRequest();
+                    return Forbid();
                 }
 
                 unitOfWork.PostBlogs.Remove(post);
+                logger.LogInfo($"Post id {id} deleted");
                 return Ok(post);
             }
             catch (Exception ex)
@@ -150,7 +152,7 @@ namespace TravelingBlog.Controllers
                 var isUserCreator = unitOfWork.Trips.IsUserCreator(user.Id, trip.Id);
                 if (!isUserCreator)
                 {
-                    return BadRequest();
+                    return Forbid();
 
                 }
                 var post = unitOfWork.PostBlogs.GetPostBlogById(id);
@@ -163,7 +165,7 @@ namespace TravelingBlog.Controllers
                 post.Plot = model.Plot;
 
                 unitOfWork.PostBlogs.Update(post);
-
+                logger.LogInfo($"Post{id} - {model.Name} updated ");
                 return Ok(post);
             }
             catch (Exception ex)
