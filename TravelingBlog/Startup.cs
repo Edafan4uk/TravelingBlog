@@ -112,10 +112,6 @@ namespace TravelingBlog
             builder = new IdentityBuilder(builder.UserType, typeof(IdentityRole), builder.Services);
             builder.AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
 
-            services.AddIdentity<AppUser, IdentityRole>()
-            .AddEntityFrameworkStores<ApplicationDbContext>();
-
-
             services.AddMvc().AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<Startup>());
 
         }

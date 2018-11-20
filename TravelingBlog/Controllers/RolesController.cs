@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -7,28 +6,28 @@ using Microsoft.AspNetCore.Identity;
 using TravelingBlog.DataAcceesLayer.Models.Entities;
 using TravelingBlog.BusinessLogicLayer.ViewModels;
 using Microsoft.AspNetCore.Authorization;
-using TravelingBlog.BusinessLogicLayer.ViewModels.DTO;
-using TravelingBlog.BusinessLogicLayer.Contracts;
-using TravelingBlog.DataAcceesLayer.Models;
 
 namespace TravelingBlog.Controllers
 {
+<<<<<<< HEAD
     //[Authorize]
     [Route("api/[controller]/[action]")]
     //[Authorize(Roles = "moderator, admin")]
+=======
+    //[Authorize(Roles = "moderator")]
+    [Route("api/[controller]")]
+>>>>>>> parent of 1c1b02a... Changed RolesController, added RoleDTO, ApplicationRole
     public class RolesController : Controller
     {
         private readonly RoleManager<IdentityRole> roleManager;
         private readonly UserManager<AppUser> userManager;
-        private ILoggerManager logger;
-
-        public RolesController(RoleManager<IdentityRole> roleManager, UserManager<AppUser> userManager, ILoggerManager logger)
+        public RolesController(RoleManager<IdentityRole> roleManager, UserManager<AppUser> userManager)
         {
             this.roleManager = roleManager;
             this.userManager = userManager;
-            this.logger = logger;
         }
 
+<<<<<<< HEAD
         
         [HttpGet]
         public IActionResult Index()
@@ -53,6 +52,9 @@ namespace TravelingBlog.Controllers
             
             return Ok(rolesList);
         }
+=======
+        public IActionResult Index() => Ok(roleManager.Roles.ToList());
+>>>>>>> parent of 1c1b02a... Changed RolesController, added RoleDTO, ApplicationRole
 
         [HttpPost]
         public async Task<IActionResult> Create(string name)
@@ -60,7 +62,10 @@ namespace TravelingBlog.Controllers
             if (!string.IsNullOrEmpty(name))
             {
                 IdentityResult result = await roleManager.CreateAsync(new IdentityRole(name));
+<<<<<<< HEAD
                 
+=======
+>>>>>>> parent of 1c1b02a... Changed RolesController, added RoleDTO, ApplicationRole
                 if (result.Succeeded)
                 {
                     return RedirectToAction("Index");
@@ -86,17 +91,8 @@ namespace TravelingBlog.Controllers
             }
             return RedirectToAction("Index");
         }
-        //[HttpPost]
-        //public async Task<IActionResult> Delete(string name)
-        //{
-        //    IdentityRole role = await roleManager.FindByNameAsync(name);
-        //    if (role != null)
-        //    {
-        //        IdentityResult result = await roleManager.DeleteAsync(role);
-        //    }
-        //    return RedirectToAction("Index");
-        //}
 
+<<<<<<< HEAD
         [HttpGet]
         public IActionResult UserList()
         {
@@ -113,8 +109,10 @@ namespace TravelingBlog.Controllers
             //}
             return Ok(userList);
         }
+=======
+        public IActionResult UserList() => Ok(userManager.Users.ToList());
+>>>>>>> parent of 1c1b02a... Changed RolesController, added RoleDTO, ApplicationRole
 
-        [HttpGet]
         public async Task<IActionResult> Edit(string userId)
         {
             AppUser user = await userManager.FindByIdAsync(userId);
@@ -157,6 +155,5 @@ namespace TravelingBlog.Controllers
             }
             return NotFound();
         }
-
     }
 }
