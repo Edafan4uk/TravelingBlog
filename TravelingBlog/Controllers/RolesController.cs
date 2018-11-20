@@ -13,6 +13,7 @@ using TravelingBlog.DataAcceesLayer.Models;
 
 namespace TravelingBlog.Controllers
 {
+    //[Authorize]
     [Route("api/[controller]/[action]")]
     //[Authorize(Roles = "moderator, admin")]
     public class RolesController : Controller
@@ -33,24 +34,24 @@ namespace TravelingBlog.Controllers
         public IActionResult Index()
         {
             var rolesList = roleManager.Roles.ToList();
-            var rolesListDTO = new List<RoleDTO>();
-            try
-            {
-            int IdDTO = 0;
+            //var rolesListDTO = new List<RoleDTO>();
+            //try
+            //{
+            //int IdDTO = 0;
             
-                foreach (var role in rolesList)
-                {
-                    Int32.TryParse(role.Id, out IdDTO);
-                    rolesListDTO.Add(new RoleDTO { Id = IdDTO, Name = role.Name });
-                }
-            }
-            catch (System.FormatException e)
-            {
-                logger.LogError($"Wrong input format inside RolesController;{e.Message}");
-                return StatusCode(500, "Internal Server Error");
-            }
+            //    foreach (var role in rolesList)
+            //    {
+            //        Int32.TryParse(role.Id, out IdDTO);
+            //        rolesListDTO.Add(new RoleDTO { Id = IdDTO, Name = role.Name });
+            //    }
+            //}
+            //catch (System.FormatException e)
+            //{
+            //    logger.LogError($"Wrong input format inside RolesController;{e.Message}");
+            //    return StatusCode(500, "Internal Server Error");
+            //}
             
-            return Ok(rolesListDTO);
+            return Ok(rolesList);
         }
 
         [HttpPost]
@@ -58,7 +59,7 @@ namespace TravelingBlog.Controllers
         {
             if (!string.IsNullOrEmpty(name))
             {
-                IdentityResult result = await roleManager.CreateAsync(new ApplicationRole(name));
+                IdentityResult result = await roleManager.CreateAsync(new IdentityRole(name));
                 
                 if (result.Succeeded)
                 {
@@ -75,7 +76,7 @@ namespace TravelingBlog.Controllers
             return Ok(name);
         }
 
-        [HttpPost]
+        [HttpDelete]
         public async Task<IActionResult> Delete(string id)
         {
             IdentityRole role = await roleManager.FindByIdAsync(id);
@@ -96,6 +97,7 @@ namespace TravelingBlog.Controllers
         //    return RedirectToAction("Index");
         //}
 
+        [HttpGet]
         public IActionResult UserList()
         {
             var userList = userManager.Users.ToList();
@@ -105,7 +107,7 @@ namespace TravelingBlog.Controllers
             //    userListDTO.Add(new UserInfoDTO
             //    {
             //        FirstName = user.UserName,
-            //        LastName = user.UserName,
+            //        //LastName = String.Empty,
             //        Phone = user.PhoneNumber
             //    });
             //}
