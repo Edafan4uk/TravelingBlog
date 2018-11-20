@@ -17,6 +17,7 @@ namespace TravelingBlog.Controllers
 {
     [Route("api/[controller]")]
     //[ApiController]
+    [Authorize]
     public class PostBlogController : Controller
     {
         private readonly ClaimsPrincipal caller;
@@ -29,6 +30,7 @@ namespace TravelingBlog.Controllers
             unitOfWork = _unitOfWork;
             caller = httpContextAccessor.HttpContext.User;
         }
+        [AllowAnonymous]
         [HttpGet]
         public IActionResult GetAllBlogs()
         {
@@ -45,7 +47,6 @@ namespace TravelingBlog.Controllers
             }
             catch (Exception ex)
             {
-
                 logger.LogError($"Something went wrong inside GetAllBlogs;{ex.Message}");
                 return StatusCode(500, "Internal Server Error");
             }
@@ -75,7 +76,6 @@ namespace TravelingBlog.Controllers
         }
 
         [HttpPost]
-        [Authorize]
         public async Task<IActionResult> AddBlogAsync([FromBody]PostBlogDTO model)
         {
             try
@@ -110,7 +110,6 @@ namespace TravelingBlog.Controllers
         }
 
         [HttpDelete("{id}")]
-        [Authorize]
         public async Task<IActionResult> AsyncDeleteBlog(int id)
         {
             try
@@ -139,7 +138,6 @@ namespace TravelingBlog.Controllers
         }
 
         [HttpPut("{id}")]
-        [Authorize]
         public async Task<IActionResult> AsyncUpdateBlog(int id, [FromBody]PostBlogDTO model)
         {
             try
