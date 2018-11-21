@@ -30,6 +30,7 @@ namespace TravelingBlog.Controllers
             unitOfWork = _unitOfWork;
             caller = httpContextAccessor.HttpContext.User;
         }
+
         [AllowAnonymous]
         [HttpGet]
         public IActionResult GetAllBlogs()

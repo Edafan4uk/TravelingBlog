@@ -7,12 +7,24 @@ using Microsoft.AspNetCore.Identity;
 using TravelingBlog.DataAcceesLayer.Models.Entities;
 using TravelingBlog.BusinessLogicLayer.ViewModels;
 using Microsoft.AspNetCore.Authorization;
+<<<<<<< HEAD
 using TravelingBlog.BusinessLogicLayer.Contracts;
 
 namespace TravelingBlog.Controllers
 {
     //[Authorize(Roles = "admin")]
     [Route("api/[controller]/[action]")]
+=======
+using TravelingBlog.BusinessLogicLayer.ViewModels.DTO;
+using TravelingBlog.BusinessLogicLayer.Contracts;
+using TravelingBlog.DataAcceesLayer.Models;
+
+namespace TravelingBlog.Controllers
+{
+    //[Authorize]
+    [Route("api/[controller]/[action]")]
+    //[Authorize(Roles = "moderator, admin")]
+>>>>>>> parent of 8b6d8a4... revert
     public class RolesController : Controller
     {
         private readonly RoleManager<IdentityRole> roleManager;
@@ -26,7 +38,11 @@ namespace TravelingBlog.Controllers
             this.logger = logger;
         }
 
+<<<<<<< HEAD
 
+=======
+        
+>>>>>>> parent of 8b6d8a4... revert
         [HttpGet]
         public IActionResult Index()
         {
@@ -58,7 +74,11 @@ namespace TravelingBlog.Controllers
             if (!string.IsNullOrEmpty(name))
             {
                 IdentityResult result = await roleManager.CreateAsync(new IdentityRole(name));
+<<<<<<< HEAD
 
+=======
+                
+>>>>>>> parent of 8b6d8a4... revert
                 if (result.Succeeded)
                 {
                     return RedirectToAction("Index");
@@ -84,8 +104,12 @@ namespace TravelingBlog.Controllers
             }
             return RedirectToAction("Index");
         }
+<<<<<<< HEAD
         #region
         //[HttpDelete]
+=======
+        //[HttpPost]
+>>>>>>> parent of 8b6d8a4... revert
         //public async Task<IActionResult> Delete(string name)
         //{
         //    IdentityRole role = await roleManager.FindByNameAsync(name);
@@ -95,7 +119,11 @@ namespace TravelingBlog.Controllers
         //    }
         //    return RedirectToAction("Index");
         //}
+<<<<<<< HEAD
         #endregion
+=======
+
+>>>>>>> parent of 8b6d8a4... revert
         [HttpGet]
         public IActionResult UserList()
         {

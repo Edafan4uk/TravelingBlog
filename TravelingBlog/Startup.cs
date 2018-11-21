@@ -115,6 +115,10 @@ namespace TravelingBlog
             services.AddIdentity<AppUser, IdentityRole>()
             .AddEntityFrameworkStores<ApplicationDbContext>();
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> parent of 8b6d8a4... revert
             services.AddMvc().AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<Startup>());
 
         }
