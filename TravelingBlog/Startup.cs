@@ -116,6 +116,10 @@ namespace TravelingBlog
             .AddEntityFrameworkStores<ApplicationDbContext>();
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+
+>>>>>>> parent of 8b6d8a4... revert
 =======
 
 >>>>>>> parent of 8b6d8a4... revert

@@ -8,6 +8,7 @@ using TravelingBlog.DataAcceesLayer.Models.Entities;
 using TravelingBlog.BusinessLogicLayer.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 <<<<<<< HEAD
+<<<<<<< HEAD
 using TravelingBlog.BusinessLogicLayer.Contracts;
 
 namespace TravelingBlog.Controllers
@@ -15,6 +16,8 @@ namespace TravelingBlog.Controllers
     //[Authorize(Roles = "admin")]
     [Route("api/[controller]/[action]")]
 =======
+=======
+>>>>>>> parent of 8b6d8a4... revert
 using TravelingBlog.BusinessLogicLayer.ViewModels.DTO;
 using TravelingBlog.BusinessLogicLayer.Contracts;
 using TravelingBlog.DataAcceesLayer.Models;
@@ -24,6 +27,9 @@ namespace TravelingBlog.Controllers
     //[Authorize]
     [Route("api/[controller]/[action]")]
     //[Authorize(Roles = "moderator, admin")]
+<<<<<<< HEAD
+>>>>>>> parent of 8b6d8a4... revert
+=======
 >>>>>>> parent of 8b6d8a4... revert
     public class RolesController : Controller
     {
@@ -39,8 +45,11 @@ namespace TravelingBlog.Controllers
         }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 =======
+=======
+>>>>>>> parent of 8b6d8a4... revert
         
 >>>>>>> parent of 8b6d8a4... revert
         [HttpGet]
@@ -75,7 +84,11 @@ namespace TravelingBlog.Controllers
             {
                 IdentityResult result = await roleManager.CreateAsync(new IdentityRole(name));
 <<<<<<< HEAD
+<<<<<<< HEAD
 
+=======
+                
+>>>>>>> parent of 8b6d8a4... revert
 =======
                 
 >>>>>>> parent of 8b6d8a4... revert
@@ -105,8 +118,12 @@ namespace TravelingBlog.Controllers
             return RedirectToAction("Index");
         }
 <<<<<<< HEAD
+<<<<<<< HEAD
         #region
         //[HttpDelete]
+=======
+        //[HttpPost]
+>>>>>>> parent of 8b6d8a4... revert
 =======
         //[HttpPost]
 >>>>>>> parent of 8b6d8a4... revert
@@ -120,7 +137,11 @@ namespace TravelingBlog.Controllers
         //    return RedirectToAction("Index");
         //}
 <<<<<<< HEAD
+<<<<<<< HEAD
         #endregion
+=======
+
+>>>>>>> parent of 8b6d8a4... revert
 =======
 
 >>>>>>> parent of 8b6d8a4... revert
