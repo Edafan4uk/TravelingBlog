@@ -19,13 +19,11 @@ namespace TravelingBlog.Controllers
     {
         private readonly RoleManager<IdentityRole> roleManager;
         private readonly UserManager<AppUser> userManager;
-        private ILoggerManager logger;
 
         public RolesController(RoleManager<IdentityRole> roleManager, UserManager<AppUser> userManager, ILoggerManager logger)
         {
             this.roleManager = roleManager;
             this.userManager = userManager;
-            this.logger = logger;
         }
 
 
@@ -56,7 +54,7 @@ namespace TravelingBlog.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(string name)
+        public async Task<IActionResult> Create([FromBody]string name)
         {
             if (!string.IsNullOrEmpty(name))
             {
@@ -137,7 +135,7 @@ namespace TravelingBlog.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> Edit(string userId, List<string> roles)
+        public async Task<IActionResult> Edit(string userId, [FromBody]List<string> roles)
         {
             AppUser user = await userManager.FindByIdAsync(userId);
             if (user != null)
