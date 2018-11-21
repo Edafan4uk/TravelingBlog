@@ -111,21 +111,6 @@ namespace TravelingBlog
             });
             builder = new IdentityBuilder(builder.UserType, typeof(IdentityRole), builder.Services);
             builder.AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
-
-<<<<<<< HEAD
-            services.AddIdentity<AppUser, IdentityRole>()
-            .AddEntityFrameworkStores<ApplicationDbContext>();
-
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-
->>>>>>> parent of 8b6d8a4... revert
-=======
-
->>>>>>> parent of 8b6d8a4... revert
-=======
->>>>>>> parent of 1c1b02a... Changed RolesController, added RoleDTO, ApplicationRole
             services.AddMvc().AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<Startup>());
 
         }
