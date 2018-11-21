@@ -7,15 +7,12 @@ using Microsoft.AspNetCore.Identity;
 using TravelingBlog.DataAcceesLayer.Models.Entities;
 using TravelingBlog.BusinessLogicLayer.ViewModels;
 using Microsoft.AspNetCore.Authorization;
-using TravelingBlog.BusinessLogicLayer.ViewModels.DTO;
 using TravelingBlog.BusinessLogicLayer.Contracts;
-using TravelingBlog.DataAcceesLayer.Models;
 
 namespace TravelingBlog.Controllers
 {
-    //[Authorize]
+    //[Authorize(Roles = "admin")]
     [Route("api/[controller]/[action]")]
-    //[Authorize(Roles = "moderator, admin")]
     public class RolesController : Controller
     {
         private readonly RoleManager<IdentityRole> roleManager;
@@ -34,6 +31,7 @@ namespace TravelingBlog.Controllers
         public IActionResult Index()
         {
             var rolesList = roleManager.Roles.ToList();
+            #region
             //var rolesListDTO = new List<RoleDTO>();
             //try
             //{
@@ -50,7 +48,7 @@ namespace TravelingBlog.Controllers
             //    logger.LogError($"Wrong input format inside RolesController;{e.Message}");
             //    return StatusCode(500, "Internal Server Error");
             //}
-
+            #endregion
             return Ok(rolesList);
         }
 
@@ -86,7 +84,8 @@ namespace TravelingBlog.Controllers
             }
             return RedirectToAction("Index");
         }
-        //[HttpPost]
+        #region
+        //[HttpDelete]
         //public async Task<IActionResult> Delete(string name)
         //{
         //    IdentityRole role = await roleManager.FindByNameAsync(name);
@@ -96,11 +95,12 @@ namespace TravelingBlog.Controllers
         //    }
         //    return RedirectToAction("Index");
         //}
-
+        #endregion
         [HttpGet]
         public IActionResult UserList()
         {
             var userList = userManager.Users.ToList();
+            #region
             //var userListDTO = new List<UserInfoDTO>();
             //foreach (var user in userList)
             //{
@@ -111,6 +111,7 @@ namespace TravelingBlog.Controllers
             //        Phone = user.PhoneNumber
             //    });
             //}
+            #endregion
             return Ok(userList);
         }
 
@@ -121,20 +122,18 @@ namespace TravelingBlog.Controllers
             if (user != null)
             {
                 var userRoles = await userManager.GetRolesAsync(user);
-                var allRoles = roleManager.Roles.ToList();
                 ChangeRoleViewModel model = new ChangeRoleViewModel
                 {
                     UserId = user.Id,
                     UserName = user.UserName,
                     UserRoles = userRoles,
-                    AllRoles = allRoles
                 };
                 return Ok(model);
             }
             return NotFound();
         }
 
-        [HttpPost]
+        [HttpPut]
         public async Task<IActionResult> Edit(string userId, List<string> roles)
         {
             AppUser user = await userManager.FindByIdAsync(userId);
@@ -152,7 +151,7 @@ namespace TravelingBlog.Controllers
                 await userManager.AddToRolesAsync(user, addedRoles);
 
                 await userManager.RemoveFromRolesAsync(user, removedRoles);
-
+    
                 return RedirectToAction("UserList");
             }
             return NotFound();
