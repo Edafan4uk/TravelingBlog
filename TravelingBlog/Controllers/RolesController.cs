@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -6,57 +7,28 @@ using Microsoft.AspNetCore.Identity;
 using TravelingBlog.DataAcceesLayer.Models.Entities;
 using TravelingBlog.BusinessLogicLayer.ViewModels;
 using Microsoft.AspNetCore.Authorization;
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-using TravelingBlog.BusinessLogicLayer.Contracts;
-
-namespace TravelingBlog.Controllers
-{
-    //[Authorize(Roles = "admin")]
-    [Route("api/[controller]/[action]")]
-=======
-=======
->>>>>>> parent of 8b6d8a4... revert
 using TravelingBlog.BusinessLogicLayer.ViewModels.DTO;
 using TravelingBlog.BusinessLogicLayer.Contracts;
 using TravelingBlog.DataAcceesLayer.Models;
 
 namespace TravelingBlog.Controllers
 {
-    //[Authorize]
-    [Route("api/[controller]/[action]")]
     //[Authorize(Roles = "moderator, admin")]
-<<<<<<< HEAD
->>>>>>> parent of 8b6d8a4... revert
-=======
->>>>>>> parent of 8b6d8a4... revert
-=======
-
-namespace TravelingBlog.Controllers
-{
-    //[Authorize(Roles = "moderator")]
-    [Route("api/[controller]")]
->>>>>>> parent of 1c1b02a... Changed RolesController, added RoleDTO, ApplicationRole
+    [Route("api/[controller]/[action]")]
     public class RolesController : Controller
     {
         private readonly RoleManager<IdentityRole> roleManager;
         private readonly UserManager<AppUser> userManager;
-        public RolesController(RoleManager<IdentityRole> roleManager, UserManager<AppUser> userManager)
+        private ILoggerManager logger;
+
+        public RolesController(RoleManager<IdentityRole> roleManager, UserManager<AppUser> userManager, ILoggerManager logger)
         {
             this.roleManager = roleManager;
             this.userManager = userManager;
+            this.logger = logger;
         }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
 
-=======
-=======
->>>>>>> parent of 8b6d8a4... revert
-        
->>>>>>> parent of 8b6d8a4... revert
         [HttpGet]
         public IActionResult Index()
         {
@@ -79,11 +51,9 @@ namespace TravelingBlog.Controllers
             //    return StatusCode(500, "Internal Server Error");
             //}
             #endregion
+
             return Ok(rolesList);
         }
-=======
-        public IActionResult Index() => Ok(roleManager.Roles.ToList());
->>>>>>> parent of 1c1b02a... Changed RolesController, added RoleDTO, ApplicationRole
 
         [HttpPost]
         public async Task<IActionResult> Create(string name)
@@ -91,18 +61,7 @@ namespace TravelingBlog.Controllers
             if (!string.IsNullOrEmpty(name))
             {
                 IdentityResult result = await roleManager.CreateAsync(new IdentityRole(name));
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
 
-=======
-                
->>>>>>> parent of 8b6d8a4... revert
-=======
-                
->>>>>>> parent of 8b6d8a4... revert
-=======
->>>>>>> parent of 1c1b02a... Changed RolesController, added RoleDTO, ApplicationRole
                 if (result.Succeeded)
                 {
                     return RedirectToAction("Index");
@@ -128,17 +87,8 @@ namespace TravelingBlog.Controllers
             }
             return RedirectToAction("Index");
         }
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
         #region
-        //[HttpDelete]
-=======
         //[HttpPost]
->>>>>>> parent of 8b6d8a4... revert
-=======
-        //[HttpPost]
->>>>>>> parent of 8b6d8a4... revert
         //public async Task<IActionResult> Delete(string name)
         //{
         //    IdentityRole role = await roleManager.FindByNameAsync(name);
@@ -148,15 +98,7 @@ namespace TravelingBlog.Controllers
         //    }
         //    return RedirectToAction("Index");
         //}
-<<<<<<< HEAD
-<<<<<<< HEAD
         #endregion
-=======
-
->>>>>>> parent of 8b6d8a4... revert
-=======
-
->>>>>>> parent of 8b6d8a4... revert
         [HttpGet]
         public IActionResult UserList()
         {
@@ -175,11 +117,8 @@ namespace TravelingBlog.Controllers
             #endregion
             return Ok(userList);
         }
-=======
 
-        public IActionResult UserList() => Ok(userManager.Users.ToList());
->>>>>>> parent of 1c1b02a... Changed RolesController, added RoleDTO, ApplicationRole
-
+        [HttpGet]
         public async Task<IActionResult> Edit(string userId)
         {
             AppUser user = await userManager.FindByIdAsync(userId);
@@ -215,10 +154,11 @@ namespace TravelingBlog.Controllers
                 await userManager.AddToRolesAsync(user, addedRoles);
 
                 await userManager.RemoveFromRolesAsync(user, removedRoles);
-    
+
                 return RedirectToAction("UserList");
             }
             return NotFound();
         }
+
     }
 }
